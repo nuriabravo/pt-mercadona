@@ -11,4 +11,5 @@ import java.util.List;
 public class StoreHoursReportDto {
     private String storeName;
     private List<RemainderSectionDto> remainderSections;
+    private String storeAddress;
 }

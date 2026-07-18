@@ -12,4 +12,5 @@ import java.util.List;
 public class StoreStatusReportDto {
     private String storeName;
     private List<SectionStatusDto> sections;
+    private String storeAddress;
 }

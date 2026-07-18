@@ -1,0 +1,4 @@
+services:
+  stores-api:
+    image: jameral/stores:latest
+    platform: linux/arm64
