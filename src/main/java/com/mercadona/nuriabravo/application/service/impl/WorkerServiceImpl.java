@@ -4,12 +4,15 @@ import com.mercadona.nuriabravo.application.dto.input.WorkerRequestDto;
 import com.mercadona.nuriabravo.application.dto.output.WorkerResponseDto;
 import com.mercadona.nuriabravo.application.service.WorkerService;
 import com.mercadona.nuriabravo.domain.exception.StoreNotFoundException;
+import com.mercadona.nuriabravo.domain.exception.WorkerHoursExceededException;
 import com.mercadona.nuriabravo.domain.exception.WorkerNotFoundException;
 import com.mercadona.nuriabravo.domain.mapper.WorkerMapper;
 import com.mercadona.nuriabravo.domain.model.Store;
 import com.mercadona.nuriabravo.domain.model.Worker;
+import com.mercadona.nuriabravo.domain.model.WorkerSectionAssignment;
 import com.mercadona.nuriabravo.domain.repository.StoreRepository;
 import com.mercadona.nuriabravo.domain.repository.WorkerRepository;
+import com.mercadona.nuriabravo.domain.repository.WorkerSectionAssignmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +27,7 @@ public class WorkerServiceImpl implements WorkerService {
     private final WorkerRepository workerRepository;
     private final StoreRepository storeRepository;
     private final WorkerMapper workerMapper;
+    private final WorkerSectionAssignmentRepository assignmentRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -54,6 +58,8 @@ public class WorkerServiceImpl implements WorkerService {
         Worker worker = getWorkerOrThrow(id);
         Store store = getStoreOrThrow(dto.getStoreId());
 
+        validateContractHoursNotBelowAssigned(id, dto.getContractHours());
+
         workerMapper.updateDomainFromDto(dto, worker);
         worker.setStore(store);
 
@@ -76,5 +82,19 @@ public class WorkerServiceImpl implements WorkerService {
     private Store getStoreOrThrow(Long storeId) {
         return storeRepository.findById(storeId)
                 .orElseThrow(() -> new StoreNotFoundException(storeId));
+    }
+
+    private void validateContractHoursNotBelowAssigned(Long workerId, Integer newContractHours) {
+        int currentlyAssigned = sumAssignedHours(workerId);
+
+        if (newContractHours < currentlyAssigned) {
+            throw new WorkerHoursExceededException(workerId, newContractHours, currentlyAssigned);
+        }
+    }
+
+    private int sumAssignedHours(Long workerId) {
+        return assignmentRepository.findByWorkerId(workerId).stream()
+                .mapToInt(WorkerSectionAssignment::getAssignedHours)
+                .sum();
     }
 }

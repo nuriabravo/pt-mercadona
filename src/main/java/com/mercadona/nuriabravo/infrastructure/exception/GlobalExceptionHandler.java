@@ -1,7 +1,6 @@
 package com.mercadona.nuriabravo.infrastructure.exception;
 
-import com.mercadona.nuriabravo.domain.exception.StoreNotFoundException;
-import com.mercadona.nuriabravo.domain.exception.WorkerNotFoundException;
+import com.mercadona.nuriabravo.domain.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -16,9 +15,19 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({WorkerNotFoundException.class, StoreNotFoundException.class})
+    @ExceptionHandler({
+            WorkerNotFoundException.class,
+            StoreNotFoundException.class,
+            SectionNotFoundException.class,
+            AssignmentNotFoundException.class
+    })
     public ResponseEntity<Object> handleNotFound(RuntimeException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorBody(ex.getMessage()));
+    }
+
+    @ExceptionHandler(WorkerHoursExceededException.class)
+    public ResponseEntity<Object> handleHoursExceeded(WorkerHoursExceededException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorBody(ex.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
