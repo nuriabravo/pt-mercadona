@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface WorkerSectionAssignmentJpaRepository extends JpaRepository<WorkerSectionAssignmentJpa, Long> {
     List<WorkerSectionAssignmentJpa> findByWorkerId(Long workerId);
+    List<WorkerSectionAssignmentJpa> findByStoreSectionId(Long storeSectionId);
 }

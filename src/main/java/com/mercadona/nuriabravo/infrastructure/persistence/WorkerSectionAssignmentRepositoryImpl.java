@@ -40,4 +40,11 @@ public class WorkerSectionAssignmentRepositoryImpl implements WorkerSectionAssig
     public void deleteById(Long id) {
         jpaRepository.deleteById(id);
     }
+
+    @Override
+    public List<WorkerSectionAssignment> findByStoreSectionId(Long storeSectionId) {
+        return jpaRepository.findByStoreSectionId(storeSectionId).stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
 }

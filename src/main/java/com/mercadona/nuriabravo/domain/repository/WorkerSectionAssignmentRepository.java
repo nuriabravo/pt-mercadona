@@ -10,4 +10,5 @@ public interface WorkerSectionAssignmentRepository {
     Optional<WorkerSectionAssignment> findById(Long id);
     WorkerSectionAssignment save(WorkerSectionAssignment assignment);
     void deleteById(Long id);
+    List<WorkerSectionAssignment> findByStoreSectionId(Long storeSectionId);
 }
