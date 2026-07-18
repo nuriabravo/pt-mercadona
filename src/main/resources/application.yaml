@@ -23,3 +23,7 @@ spring:
 stores:
   api:
     base-url: ${STORE_URL:http://localhost:8081}
+
+jwt:
+  token:
+    expiration: 24
