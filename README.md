@@ -52,8 +52,8 @@ El proyecto sigue una arquitectura hexagonal, con tres capas principales:
 ```bash
    docker-compose up -d
 ```
-Esto monta `jameral/stores` en `http://localhost:8081`. Ver la sección
-[Limitaciones conocidas](#limitaciones-conocidas) más abajo.
+Esto monta `jameral/stores` en `http://localhost:8080`. Ver la sección[Limitaciones](#limitaciones) más abajo.
+
 5. (Opcional) En `src/main/resources/postman` hay una colección Postman preparada para probar
    los endpoints.
 
@@ -65,8 +65,16 @@ de la API (Postman) o manualmente.
 
 ## Endpoints
 
+### Auth
+
+No requiere autenticación.
+| Método | Endpoint | Request Body | Response | Descripción |
+|--------|---------|--------------|---------|-------------|
+| POST   | `/api/login` | `{ "username": "string", "password": "string" }` | `LoginResponse` | Autentica un usuario y devuelve un token de acceso junto con su fecha de expiración. |
+
 ### Workers
 
+Requiere autenticación.
 | Método | Endpoint | Request Body | Response | Descripción |
 |--------|---------|--------------|---------|-------------|
 | GET    | `/api/workers` | — | `List<WorkerResponseDto>` | Obtiene todos los trabajadores. |
@@ -77,6 +85,7 @@ de la API (Postman) o manualmente.
 
 ### Worker Section Assignments
 
+Requiere autenticación.
 | Método | Endpoint | Request Body | Response | Descripción |
 |--------|---------|--------------|---------|-------------|
 | GET    | `/api/workers/{workerId}/assignments` | — | `List<AssignmentResponseDto>` | Obtiene las asignaciones de un trabajador. |
@@ -85,11 +94,13 @@ de la API (Postman) o manualmente.
 
 ### Store Reports
 
+Requiere autenticación.
 | Método | Endpoint | Request Body | Response | Descripción |
 |--------|---------|--------------|---------|-------------|
 | GET    | `/api/stores/{storeId}/reports/status` | — | `StoreStatusReportDto` | Estado de la tienda: secciones y trabajadores asignados con sus horas. |
 | GET    | `/api/stores/{storeId}/reports/uncovered-hours` | — | `StoreHoursReportDto` | Secciones de la tienda con horas sin cubrir y cuántas horas faltan. |
 
+No requiere autenticación.
 _(pendiente)_ Documentación interactiva en `http://localhost:8080/swagger-ui.html`
 
 ## Decisiones tomadas
@@ -115,7 +126,7 @@ La imagen `jameral/stores` solo está publicada para arquitectura `linux/arm64`,
 provoca `exec format error` en otros sistemas. El `docker-compose.yml` incluido
 especifica `platform: linux/arm64` para que Docker gestione la emulación (necesita QEMU para la emulación).
 
-Además, se ha detectado un bug en la propia imagen: su script
+Además, se ha detectado un bug en la propia imagen. Su script
 `data.sql` intenta insertar datos antes de que Hibernate/JPA haya creado el esquema.
 Este fallo es interno, en la imagen proporcionada.
 
