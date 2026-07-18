@@ -7,6 +7,7 @@ import com.mercadona.nuriabravo.domain.mapper.StoreReportMapper;
 import com.mercadona.nuriabravo.domain.model.Store;
 import com.mercadona.nuriabravo.domain.model.StoreSection;
 import com.mercadona.nuriabravo.domain.model.WorkerSectionAssignment;
+import com.mercadona.nuriabravo.domain.repository.StoreLocationProvider;
 import com.mercadona.nuriabravo.domain.repository.StoreRepository;
 import com.mercadona.nuriabravo.domain.repository.StoreSectionRepository;
 import com.mercadona.nuriabravo.domain.repository.WorkerSectionAssignmentRepository;
@@ -26,6 +27,7 @@ public class StoreReportServiceImpl implements StoreReportService {
     private final StoreSectionRepository storeSectionRepository;
     private final WorkerSectionAssignmentRepository assignmentRepository;
     private final StoreReportMapper mapper;
+    private final StoreLocationProvider storeLocationProvider;
 
     @Override
     public StoreStatusReportDto getStoreStatus(Long storeId) {
@@ -36,7 +38,9 @@ public class StoreReportServiceImpl implements StoreReportService {
                 .map(this::buildSectionStatus)
                 .toList();
 
-        return mapper.toStoreStatusReportDto(store, sectionStatuses);
+        String address = resolveStoreAddress(storeId);
+
+        return mapper.toStoreStatusReportDto(store, address, sectionStatuses);
     }
 
     @Override
@@ -49,7 +53,13 @@ public class StoreReportServiceImpl implements StoreReportService {
                 .filter(Objects::nonNull)
                 .toList();
 
-        return mapper.toStoreHoursReportDto(store, remainderSections);
+        String address = resolveStoreAddress(storeId);
+
+        return mapper.toStoreHoursReportDto(store, address, remainderSections);
+    }
+
+    private String resolveStoreAddress(Long storeId) {
+        return storeLocationProvider.findAddressByStoreId(storeId).orElse(null);
     }
 
     private SectionStatusDto buildSectionStatus(StoreSection storeSection) {

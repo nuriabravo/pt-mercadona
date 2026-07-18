@@ -14,7 +14,8 @@ public interface StoreReportMapper {
 
     @Mapping(target = "storeName", source = "store.name")
     @Mapping(target = "sections", source = "sections")
-    StoreStatusReportDto toStoreStatusReportDto(Store store, List<SectionStatusDto> sections);
+    @Mapping(target = "storeAddress", source = "storeAddress")
+    StoreStatusReportDto toStoreStatusReportDto(Store store, String storeAddress, List<SectionStatusDto> sections);
 
     @Mapping(target = "sectionName", source = "storeSection.section.name")
     @Mapping(target = "assignedWorkers", source = "assignedWorkers")
@@ -29,7 +30,8 @@ public interface StoreReportMapper {
 
     @Mapping(target = "storeName", source = "store.name")
     @Mapping(target = "remainderSections", source = "remainderSections")
-    StoreHoursReportDto toStoreHoursReportDto(Store store, List<RemainderSectionDto> remainderSections);
+    @Mapping(target = "storeAddress", source = "storeAddress")
+    StoreHoursReportDto toStoreHoursReportDto(Store store, String storeAddress, List<RemainderSectionDto> remainderSections);
 
     @Mapping(target = "sectionName", source = "storeSection.section.name")
     @Mapping(target = "missingHours", source = "missingHours")
