@@ -1,13 +1,12 @@
 package com.mercadona.nuriabravo.application.service.impl;
 
-import com.mercadona.nuriabravo.application.dto.output.AssignedWorkerDto;
-import com.mercadona.nuriabravo.application.dto.output.SectionStatusDto;
-import com.mercadona.nuriabravo.application.dto.output.StoreStatusReportDto;
+import com.mercadona.nuriabravo.application.dto.output.*;
 import com.mercadona.nuriabravo.application.service.StoreReportService;
 import com.mercadona.nuriabravo.domain.exception.StoreNotFoundException;
 import com.mercadona.nuriabravo.domain.mapper.StoreReportMapper;
 import com.mercadona.nuriabravo.domain.model.Store;
 import com.mercadona.nuriabravo.domain.model.StoreSection;
+import com.mercadona.nuriabravo.domain.model.WorkerSectionAssignment;
 import com.mercadona.nuriabravo.domain.repository.StoreRepository;
 import com.mercadona.nuriabravo.domain.repository.StoreSectionRepository;
 import com.mercadona.nuriabravo.domain.repository.WorkerSectionAssignmentRepository;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -39,11 +39,42 @@ public class StoreReportServiceImpl implements StoreReportService {
         return mapper.toStoreStatusReportDto(store, sectionStatuses);
     }
 
+    @Override
+    public StoreHoursReportDto getUncoveredHours(Long storeId) {
+        Store store = getStoreOrThrow(storeId);
+        List<StoreSection> storeSections = storeSectionRepository.findByStoreId(storeId);
+
+        List<RemainderSectionDto> remainderSections = storeSections.stream()
+                .map(this::buildRemainderSection)
+                .filter(Objects::nonNull)
+                .toList();
+
+        return mapper.toStoreHoursReportDto(store, remainderSections);
+    }
+
     private SectionStatusDto buildSectionStatus(StoreSection storeSection) {
         List<AssignedWorkerDto> assignedWorkers = mapper.toAssignedWorkerDtoList(
                 assignmentRepository.findByStoreSectionId(storeSection.getId())
         );
         return mapper.toSectionStatusDto(storeSection, assignedWorkers);
+    }
+
+    private RemainderSectionDto buildRemainderSection(StoreSection storeSection) {
+        int assignedHours = sumAssignedHours(storeSection.getId());
+        int requiredHours = storeSection.getSection().getDailyRequiredHours();
+        int missingHours = requiredHours - assignedHours;
+
+        if (missingHours <= 0) {
+            return null;
+        }
+
+        return mapper.toRemainderSectionDto(storeSection, missingHours);
+    }
+
+    private int sumAssignedHours(Long storeSectionId) {
+        return assignmentRepository.findByStoreSectionId(storeSectionId).stream()
+                .mapToInt(WorkerSectionAssignment::getAssignedHours)
+                .sum();
     }
 
     private Store getStoreOrThrow(Long storeId) {

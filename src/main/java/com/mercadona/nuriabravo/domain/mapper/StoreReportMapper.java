@@ -1,8 +1,6 @@
 package com.mercadona.nuriabravo.domain.mapper;
 
-import com.mercadona.nuriabravo.application.dto.output.AssignedWorkerDto;
-import com.mercadona.nuriabravo.application.dto.output.SectionStatusDto;
-import com.mercadona.nuriabravo.application.dto.output.StoreStatusReportDto;
+import com.mercadona.nuriabravo.application.dto.output.*;
 import com.mercadona.nuriabravo.domain.model.Store;
 import com.mercadona.nuriabravo.domain.model.StoreSection;
 import com.mercadona.nuriabravo.domain.model.WorkerSectionAssignment;
@@ -28,4 +26,12 @@ public interface StoreReportMapper {
     AssignedWorkerDto toAssignedWorkerDto(WorkerSectionAssignment assignment);
 
     List<AssignedWorkerDto> toAssignedWorkerDtoList(List<WorkerSectionAssignment> assignments);
+
+    @Mapping(target = "storeName", source = "store.name")
+    @Mapping(target = "remainderSections", source = "remainderSections")
+    StoreHoursReportDto toStoreHoursReportDto(Store store, List<RemainderSectionDto> remainderSections);
+
+    @Mapping(target = "sectionName", source = "storeSection.section.name")
+    @Mapping(target = "missingHours", source = "missingHours")
+    RemainderSectionDto toRemainderSectionDto(StoreSection storeSection, Integer missingHours);
 }

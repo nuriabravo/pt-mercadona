@@ -117,6 +117,32 @@
                 "description": "Generated from cURL: curl -X GET http://localhost:8080/api/stores/1/reports/status \\\n  -H \"Accept: application/json\""
               },
               "response": []
+            },
+            {
+              "name": "hours report",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BASE_URL}}/stores/{{storeId}}/reports/uncovered-hours",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "stores",
+                    "{{storeId}}",
+                    "reports",
+                    "uncovered-hours"
+                  ]
+                },
+                "description": "Generated from cURL: curl -X GET http://localhost:8080/api/stores/1/reports/uncovered-hours \\\n  -H \"Accept: application/json\""
+              },
+              "response": []
             }
           ]
         },

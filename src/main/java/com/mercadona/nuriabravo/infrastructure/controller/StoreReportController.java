@@ -1,5 +1,6 @@
 package com.mercadona.nuriabravo.infrastructure.controller;
 
+import com.mercadona.nuriabravo.application.dto.output.StoreHoursReportDto;
 import com.mercadona.nuriabravo.application.dto.output.StoreStatusReportDto;
 import com.mercadona.nuriabravo.application.service.StoreReportService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,5 +21,11 @@ public class StoreReportController {
     @Operation(summary = "Estado de una tienda: secciones y trabajadores asignados")
     public ResponseEntity<StoreStatusReportDto> getStoreStatus(@PathVariable Long storeId) {
         return ResponseEntity.ok(storeReportService.getStoreStatus(storeId));
+    }
+
+    @GetMapping("/uncovered-hours")
+    @Operation(summary = "Secciones con horas sin cubrir en una tienda")
+    public ResponseEntity<StoreHoursReportDto> getUncoveredHours(@PathVariable Long storeId) {
+        return ResponseEntity.ok(storeReportService.getUncoveredHours(storeId));
     }
 }
