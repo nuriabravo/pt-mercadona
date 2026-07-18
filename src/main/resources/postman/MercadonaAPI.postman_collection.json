@@ -1,0 +1,244 @@
+{
+  "info": {
+    "_postman_id": "945b5665-9184-418d-bc56-40b99b6a526f",
+    "name": "MercadonaAPI",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "39799825"
+  },
+  "item": [
+    {
+      "name": "Workers",
+      "item": [
+        {
+          "name": "assignament",
+          "item": [
+            {
+              "name": "assign",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"sectionId\": 1,\n    \"hours\": 7\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/workers/{{workerId}}/assignments",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "workers",
+                    "{{workerId}}",
+                    "assignments"
+                  ]
+                },
+                "description": "Generated from cURL: curl -X POST http://localhost:8080/api/workers/1/assignments \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"sectionId\": 1, \"hours\": 4}'"
+              },
+              "response": []
+            },
+            {
+              "name": "list assignments",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}/workers/{{workerId}}/assignments",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "workers",
+                    "{{workerId}}",
+                    "assignments"
+                  ]
+                },
+                "description": "Generated from cURL: curl -X GET http://localhost:8080/api/workers/1/assignments"
+              },
+              "response": []
+            },
+            {
+              "name": "unassign",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}/workers/{{workerId}}/assignments/{{assigmentId}}",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "workers",
+                    "{{workerId}}",
+                    "assignments",
+                    "{{assigmentId}}"
+                  ]
+                },
+                "description": "Generated from cURL: curl -X DELETE http://localhost:8080/api/workers/1/assignments/1"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "report",
+          "item": [
+            {
+              "name": "status report",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BASE_URL}}/stores/{{storeId}}/reports/status",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "stores",
+                    "{{storeId}}",
+                    "reports",
+                    "status"
+                  ]
+                },
+                "description": "Generated from cURL: curl -X GET http://localhost:8080/api/stores/1/reports/status \\\n  -H \"Accept: application/json\""
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "get all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/workers",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "workers"
+              ]
+            },
+            "description": "Generated from cURL: curl -X GET http://localhost:8080/api/workers \\\n  -H \"Accept: application/json\""
+          },
+          "response": []
+        },
+        {
+          "name": "create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"Nuria\",\n    \"lastName\": \"Bravo Ortiz\",\n    \"dni\": \"87654321Z\",\n    \"contractHours\": 8,\n    \"storeId\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/workers",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "workers"
+              ]
+            },
+            "description": "Generated from cURL: curl -X POST http://localhost:8080/api/workers \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"firstName\": \"Laura\",\n    \"lastName\": \"Gómez Ruiz\",\n    \"dni\": \"12345678Z\",\n    \"contractHours\": 8,\n    \"storeId\": 1\n  }'"
+          },
+          "response": []
+        },
+        {
+          "name": "get by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/workers/{{workerId}}",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "workers",
+                "{{workerId}}"
+              ]
+            },
+            "description": "Generated from cURL: curl -X GET http://localhost:8080/api/workers/1 \\\n  -H \"Accept: application/json\""
+          },
+          "response": []
+        },
+        {
+          "name": "update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"Laura\",\n    \"lastName\": \"Gómez Ruiz\",\n    \"dni\": \"12345678Z\",\n    \"contractHours\": 5,\n    \"storeId\": 1\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/workers/{{workerId}}",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "workers",
+                "{{workerId}}"
+              ]
+            },
+            "description": "Generated from cURL: curl -X PUT http://localhost:8080/api/workers/1 \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"firstName\": \"Laura\",\n    \"lastName\": \"Gómez Ruiz\",\n    \"dni\": \"12345678Z\",\n    \"contractHours\": 6,\n    \"storeId\": 1\n  }'"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "workerId",
+      "value": ""
+    }
+  ]
+}

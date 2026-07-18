@@ -8,6 +8,7 @@ import com.mercadona.nuriabravo.infrastructure.persistence.mapper.StoreSectionJp
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -26,5 +27,12 @@ public class StoreSectionRepositoryImpl implements StoreSectionRepository {
     public StoreSection save(StoreSection storeSection) {
         StoreSectionJpa entity = mapper.toEntity(storeSection);
         return mapper.toDomain(jpaRepository.save(entity));
+    }
+
+    @Override
+    public List<StoreSection> findByStoreId(Long storeId) {
+        return jpaRepository.findByStoreId(storeId).stream()
+                .map(mapper::toDomain)
+                .toList();
     }
 }
