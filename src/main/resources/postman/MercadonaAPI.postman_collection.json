@@ -15,11 +15,19 @@
             {
               "name": "assign",
               "request": {
+                "auth": {
+                  "type": "noauth"
+                },
                 "method": "POST",
                 "header": [
                   {
                     "key": "Content-Type",
                     "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{JWT_TOKEN}}",
+                    "type": "text"
                   }
                 ],
                 "body": {
@@ -49,8 +57,17 @@
             {
               "name": "list assignments",
               "request": {
+                "auth": {
+                  "type": "noauth"
+                },
                 "method": "GET",
-                "header": [],
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{JWT_TOKEN}}",
+                    "type": "text"
+                  }
+                ],
                 "url": {
                   "raw": "{{BASE_URL}}/workers/{{workerId}}/assignments",
                   "host": [
@@ -69,8 +86,17 @@
             {
               "name": "unassign",
               "request": {
+                "auth": {
+                  "type": "noauth"
+                },
                 "method": "DELETE",
-                "header": [],
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{JWT_TOKEN}}",
+                    "type": "text"
+                  }
+                ],
                 "url": {
                   "raw": "{{BASE_URL}}/workers/{{workerId}}/assignments/{{assigmentId}}",
                   "host": [
@@ -95,11 +121,19 @@
             {
               "name": "status report",
               "request": {
+                "auth": {
+                  "type": "noauth"
+                },
                 "method": "GET",
                 "header": [
                   {
                     "key": "Accept",
                     "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{JWT_TOKEN}}",
+                    "type": "text"
                   }
                 ],
                 "url": {
@@ -121,11 +155,19 @@
             {
               "name": "hours report",
               "request": {
+                "auth": {
+                  "type": "noauth"
+                },
                 "method": "GET",
                 "header": [
                   {
                     "key": "Accept",
                     "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "{{JWT_TOKEN}}",
+                    "type": "text"
                   }
                 ],
                 "url": {
@@ -149,11 +191,19 @@
         {
           "name": "get all",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
             "header": [
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "{{JWT_TOKEN}}",
+                "type": "text"
               }
             ],
             "url": {
@@ -172,11 +222,19 @@
         {
           "name": "create",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
             "header": [
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "{{JWT_TOKEN}}",
+                "type": "text"
               }
             ],
             "body": {
@@ -204,11 +262,19 @@
         {
           "name": "get by id",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
             "header": [
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "{{JWT_TOKEN}}",
+                "type": "text"
               }
             ],
             "url": {
@@ -228,11 +294,19 @@
         {
           "name": "update",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "PUT",
             "header": [
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "{{JWT_TOKEN}}",
+                "type": "text"
               }
             ],
             "body": {
@@ -259,11 +333,70 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "let responseJson = pm.response.json();\r",
+              "\r",
+              "pm.environment.set(\"JWT_TOKEN\", \"Bearer \" + responseJson.token);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"username\": \"nuria\",\r\n    \"password\": \"nuria123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/login",
+          "host": [
+            "{{BASE_URL}}"
+          ],
+          "path": [
+            "login"
+          ]
+        }
+      },
+      "response": []
     }
   ],
   "variable": [
     {
       "key": "workerId",
+      "value": ""
+    },
+    {
+      "key": "JWT_TOKEN",
       "value": ""
     }
   ]

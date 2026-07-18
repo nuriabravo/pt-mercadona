@@ -1,23 +1,34 @@
 package com.mercadona.nuriabravo.infrastructure.security;
 
+import com.mercadona.nuriabravo.application.service.UserAuthService;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-// TODO: Implement JWT authentication
 @Configuration
+@AllArgsConstructor
 public class SecurityConfig {
 
+    private final UserAuthService userService;
+
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        TokenAuthFilter tokenFilter = new TokenAuthFilter(userService);
+
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
-                .httpBasic(Customizer.withDefaults())
-                .formLogin(AbstractHttpConfigurer::disable);
+                .cors(Customizer.withDefaults())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(SecurityPaths.SECURITY_MATCHERS).permitAll()
+                        .anyRequest().authenticated()
+                );
+
+        http.addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
