@@ -20,4 +20,9 @@ public class StoreRepositoryImpl implements StoreRepository {
     public Optional<Store> findById(Long id) {
         return jpaRepository.findById(id).map(mapper::toDomain);
     }
+
+    @Override
+    public Optional<Store> findByCode(String code) {
+        return jpaRepository.findByCode(code).map(mapper::toDomain);
+    }
 }

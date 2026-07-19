@@ -4,4 +4,8 @@ public class StoreNotFoundException extends RuntimeException {
     public StoreNotFoundException(Long id) {
         super("store.notFound:" + id);
     }
+
+    public StoreNotFoundException(String code) {
+        super("store.notFound:" + code);
+    }
 }
