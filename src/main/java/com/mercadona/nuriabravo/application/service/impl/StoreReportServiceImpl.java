@@ -7,10 +7,7 @@ import com.mercadona.nuriabravo.domain.mapper.StoreReportMapper;
 import com.mercadona.nuriabravo.domain.model.Store;
 import com.mercadona.nuriabravo.domain.model.StoreSection;
 import com.mercadona.nuriabravo.domain.model.WorkerSectionAssignment;
-import com.mercadona.nuriabravo.domain.repository.StoreLocationProvider;
-import com.mercadona.nuriabravo.domain.repository.StoreRepository;
-import com.mercadona.nuriabravo.domain.repository.StoreSectionRepository;
-import com.mercadona.nuriabravo.domain.repository.WorkerSectionAssignmentRepository;
+import com.mercadona.nuriabravo.domain.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +25,7 @@ public class StoreReportServiceImpl implements StoreReportService {
     private final WorkerSectionAssignmentRepository assignmentRepository;
     private final StoreReportMapper mapper;
     private final StoreLocationProvider storeLocationProvider;
+    private final SkillRepository skillRepository;
 
     @Override
     public StoreStatusReportDto getStoreStatus(Long storeId) {
@@ -58,6 +56,18 @@ public class StoreReportServiceImpl implements StoreReportService {
         return mapper.toStoreHoursReportDto(store, address, remainderSections);
     }
 
+    @Override
+    public StoreSkillsReportDto getStoreSkillsByCode(String storeCode) {
+        Store store = getStoreOrThrow(storeCode);
+        List<StoreSection> storeSections = storeSectionRepository.findByStoreId(store.getId());
+
+        List<SectionSkillsDto> sectionSkills = storeSections.stream()
+                .map(this::buildSectionSkills)
+                .toList();
+
+        return mapper.toStoreSkillsReportDto(store, sectionSkills);
+    }
+
     private String resolveStoreAddress(Long storeId) {
         return storeLocationProvider.findAddressByStoreId(storeId).orElse(null);
     }
@@ -81,6 +91,13 @@ public class StoreReportServiceImpl implements StoreReportService {
         return mapper.toRemainderSectionDto(storeSection, missingHours);
     }
 
+    private SectionSkillsDto buildSectionSkills(StoreSection storeSection) {
+        List<SkillDto> skills = mapper.toSkillDtoList(
+                skillRepository.findBySectionId(storeSection.getSection().getId())
+        );
+        return mapper.toSectionSkillsDto(storeSection, skills);
+    }
+
     private int sumAssignedHours(Long storeSectionId) {
         return assignmentRepository.findByStoreSectionId(storeSectionId).stream()
                 .mapToInt(WorkerSectionAssignment::getAssignedHours)
@@ -90,5 +107,10 @@ public class StoreReportServiceImpl implements StoreReportService {
     private Store getStoreOrThrow(Long storeId) {
         return storeRepository.findById(storeId)
                 .orElseThrow(() -> new StoreNotFoundException(storeId));
+    }
+
+    private Store getStoreOrThrow(String storeCode) {
+        return storeRepository.findByCode(storeCode)
+                .orElseThrow(() -> new StoreNotFoundException(storeCode));
     }
 }

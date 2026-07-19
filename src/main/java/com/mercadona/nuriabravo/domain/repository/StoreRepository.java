@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface StoreRepository {
     Optional<Store> findById(Long id);
+    Optional<Store> findByCode(String code);
 }

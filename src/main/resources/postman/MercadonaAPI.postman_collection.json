@@ -32,7 +32,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"sectionId\": 1,\n    \"hours\": 7\n}",
+                  "raw": "{\n    \"sectionId\": 1,\n    \"hours\": 1\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -183,6 +183,32 @@
                   ]
                 },
                 "description": "Generated from cURL: curl -X GET http://localhost:8080/api/stores/1/reports/uncovered-hours \\\n  -H \"Accept: application/json\""
+              },
+              "response": []
+            },
+            {
+              "name": "skills report",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{JWT_TOKEN}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BASE_URL}}/stores/{{storeCode}}/reports/skills",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "stores",
+                    "{{storeCode}}",
+                    "reports",
+                    "skills"
+                  ]
+                },
+                "description": "Generated from cURL: curl -H \"Authorization: Bearer <token>\" http://localhost:8080/api/stores/1/reports/skills"
               },
               "response": []
             }
@@ -370,7 +396,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"username\": \"nuria\",\r\n    \"password\": \"nuria123\"\r\n}",
+          "raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"admin123\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
