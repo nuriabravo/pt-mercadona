@@ -2,3 +2,5 @@ services:
   stores-api:
     image: jameral/stores:latest
     platform: linux/arm64
+    ports:
+      - "8081:8080"
