@@ -3,6 +3,7 @@
 - Nuria Bravo
 - Java 21, Spring Boot, PostgreSQL, IntelliJ IDEA
 - Se ha seguido la convención estándar de GitHub: [Conventional Commits](https://gist.github.com/qoomon/5dfcdf8eec66a051ecd85625518cfd13)
+- Se han creado ramas para las distintas funcionalidades y se han ido haciendo PR.
 
 ## Índice
 - [Arquitectura](#arquitectura)
@@ -54,12 +55,12 @@ El proyecto sigue una arquitectura hexagonal, con tres capas principales:
        password: <password>
 ```
 3. Arrancar la aplicación. Flyway crea el esquema
-   y los datos de catálogo automáticamente al arrancar no es necesario ejecutar ningún script
+   y los datos automáticamente al arrancar no es necesario ejecutar ningún script
    SQL a mano. Las migraciones están en `src/main/resources/db/migration`.
 4. (Opcional, solo necesario para probar la iteración 3)
    Levantar la API externa de tiendas. Desde la raíz del proyecto:
 ```bash
-   docker-compose up -d
+   docker compose up -d
 ```
 Esto monta `jameral/stores` en `http://localhost:8081`. Ver la sección [Limitaciones](#limitaciones) más abajo.
 
@@ -165,7 +166,7 @@ Mediante códigos para más adelante hacer las traducciones.
 ## Ideas de mejora
 Estas son algunas mejoras que no se han desarrollado por el tiempo limitado de la prueba,
 pero que se considerarían en un desarrollo real:
-- Gestión de documentos para los reportes (pdf, dpcx...)
+- Gestión de documentos para los reportes (pdf, docx...)
 - Cobertura de tests ≥ 80%
 - Separación de `StoreReportMapper` en mappers específicos por tipo de informe
   (`StoreStatusReportMapper`, `StoreHoursReportMapper`, `StoreSkillsReportMapper`)
