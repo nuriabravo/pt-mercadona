@@ -173,3 +173,4 @@ pero que se considerarían en un desarrollo real:
 - Hasheo del token almacenado en BBDD (actualmente se guarda en texto plano,
   a diferencia de la contraseña, que sí usa BCrypt)
 - Perfiles (`test`, `dev`, `prod`) con configuración diferenciada
+- Añadir logs para mayor control de la traza de la petición.
