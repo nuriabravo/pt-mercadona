@@ -4,6 +4,15 @@
 - Java 21, Spring Boot, PostgreSQL, IntelliJ IDEA
 - Se ha seguido la convención estándar de GitHub: [Conventional Commits](https://gist.github.com/qoomon/5dfcdf8eec66a051ecd85625518cfd13)
 
+## Índice
+- [Arquitectura](#arquitectura)
+- [Instalación en local](#instalación-en-local)
+- [Endpoints](#endpoints)
+- [Decisiones tomadas](#decisiones-tomadas)
+- [Limitaciones](#limitaciones)
+- [Testing](#testing)
+- [Ideas de mejora](#ideas-de-mejora)
+
 ## Arquitectura
 
 El proyecto sigue una arquitectura hexagonal, con tres capas principales:
@@ -44,7 +53,7 @@ El proyecto sigue una arquitectura hexagonal, con tres capas principales:
        username: <usuario>
        password: <password>
 ```
-3. Arrancar la aplicación Flyway crea el esquema
+3. Arrancar la aplicación. Flyway crea el esquema
    y los datos de catálogo automáticamente al arrancar no es necesario ejecutar ningún script
    SQL a mano. Las migraciones están en `src/main/resources/db/migration`.
 4. (Opcional, solo necesario para probar la iteración 3)
@@ -52,7 +61,7 @@ El proyecto sigue una arquitectura hexagonal, con tres capas principales:
 ```bash
    docker-compose up -d
 ```
-Esto monta `jameral/stores` en `http://localhost:8080`. Ver la sección[Limitaciones](#limitaciones) más abajo.
+Esto monta `jameral/stores` en `http://localhost:8081`. Ver la sección [Limitaciones](#limitaciones) más abajo.
 
 5. (Opcional) En `src/main/resources/postman` hay una colección Postman preparada para probar
    los endpoints.
@@ -68,6 +77,13 @@ de la API (Postman) o manualmente.
 ### Auth
 
 No requiere autenticación.
+
+Usuarios para acceder:
+| username | password |
+|--------|---------|
+| admin | admin123 |
+| nuria | nuria123 |
+
 | Método | Endpoint | Request Body | Response | Descripción |
 |--------|---------|--------------|---------|-------------|
 | POST   | `/api/login` | `{ "username": "string", "password": "string" }` | `LoginResponse` | Autentica un usuario y devuelve un token de acceso junto con su fecha de expiración. |
@@ -99,9 +115,13 @@ Requiere autenticación.
 |--------|---------|--------------|---------|-------------|
 | GET    | `/api/stores/{storeId}/reports/status` | — | `StoreStatusReportDto` | Estado de la tienda: secciones y trabajadores asignados con sus horas. |
 | GET    | `/api/stores/{storeId}/reports/uncovered-hours` | — | `StoreHoursReportDto` | Secciones de la tienda con horas sin cubrir y cuántas horas faltan. |
+| GET    | `/api/stores/{storeCode}/reports/skills` | — | `StoreSkillsReportDto` | Aptitudes requeridas por las secciones de una tienda, buscada por código. |
+
+### Swagger
 
 No requiere autenticación.
-_(pendiente)_ Documentación interactiva en `http://localhost:8080/swagger-ui.html`
+
+Documentación interactiva en `http://localhost:8080/swagger-ui.html`
 
 ## Decisiones tomadas
 
@@ -124,7 +144,7 @@ por ser la única relación posible.
 ### Imagen Docker de la API de tiendas
 La imagen `jameral/stores` solo está publicada para arquitectura `linux/arm64`, lo que
 provoca `exec format error` en otros sistemas. El `docker-compose.yml` incluido
-especifica `platform: linux/arm64` para que Docker gestione la emulación (necesita QEMU para la emulación).
+especifica `platform: linux/arm64` para que Docker gestione la emulación (en mi caso, he utilizado QEMU para la emulación).
 
 Además, se ha detectado un bug en la propia imagen. Su script
 `data.sql` intenta insertar datos antes de que Hibernate/JPA haya creado el esquema.
@@ -135,5 +155,20 @@ del sistema externo (contenedor no disponible o API fallando). Los informes de t
 igualmente, con `storeAddress` en `null`, sin que el fallo afecte al resto de la respuesta.
 
 ## Testing
+Se han desarrollado 4 test unitarios, 2 de integración y 1 test E2E.
+Lo ideal hubiera sido cubrir todo el proyecto pero por falta de tiempo se han elegido esas clases concretas.
 
-_(pendiente)_
+##  Internacionalización
+A pesar de que no se ha desarrollado al completo, todos los errores que se manejan en el proyecto se han planteado de cara a hacer una internalización.
+Mediante códigos para más adelante hacer las traducciones.
+
+## Ideas de mejora
+Estas son algunas mejoras que no se han desarrollado por el tiempo limitado de la prueba,
+pero que se considerarían en un desarrollo real:
+- Gestión de documentos para los reportes (pdf, dpcx...)
+- Cobertura de tests ≥ 80%
+- Separación de `StoreReportMapper` en mappers específicos por tipo de informe
+  (`StoreStatusReportMapper`, `StoreHoursReportMapper`, `StoreSkillsReportMapper`)
+- Hasheo del token almacenado en BBDD (actualmente se guarda en texto plano,
+  a diferencia de la contraseña, que sí usa BCrypt)
+- Perfiles (`test`, `dev`, `prod`) con configuración diferenciada
